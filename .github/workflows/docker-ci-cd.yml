@@ -32,9 +32,8 @@ jobs:
           docker build -t backend-image ./BACK-SOFT
           docker build -t frontend-image ./FRONT-SOFT
           docker build -t db-image ./BD-SOFT
-          
-      # Depuración para verificar que las imágenes se construyeron correctamente
-      - name: List Docker images
+
+      - name: List Docker images (for debugging)
         run: docker images
 
   # Job para desplegar los contenedores en la red
@@ -45,16 +44,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: List Docker images (for debugging)
+        run: docker images
+
       - name: Deploy containers
         run: |
-          # Crear red si no existe
-          docker network create conex || true
-          
-          # Verificar que las imágenes están disponibles
-          docker images
+          docker network create conex || true  # Crear red si no existe
 
-          # Desplegar la base de datos
-          docker run -d --name db --network conex -p 5432:5432 db-image || { echo "Error deploying db"; exit 1; }
+          # Obtener el ID de la imagen db-image
+          DB_IMAGE_ID=$(docker images -q db-image)
+          
+          # Asegúrate de que el ID de la imagen db-image esté disponible
+          echo "DB_IMAGE_ID=$DB_IMAGE_ID"  # Verifica que la imagen está siendo encontrada
+
+          # Desplegar la base de datos usando el ID de la imagen
+          docker run -d --name db --network conex -p 5432:5432 $DB_IMAGE_ID || { echo "Error deploying db"; exit 1; }
 
           # Desplegar el backend
           docker run -d --name backend --network conex -p 7878:7878 backend-image || { echo "Error deploying backend"; exit 1; }
