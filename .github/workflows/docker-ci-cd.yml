@@ -33,6 +33,10 @@ jobs:
           docker build -t frontend-image ./FRONT-SOFT
           docker build -t db-image ./BD-SOFT
 
+      # Depuración para verificar que las imágenes se construyeron correctamente
+      - name: List Docker images
+        run: docker images
+
   # Job para desplegar los contenedores en la red
   deploy:
     runs-on: ubuntu-latest
@@ -43,11 +47,17 @@ jobs:
 
       - name: Deploy containers
         run: |
-          docker network create conex || true  # Crear red si no existe
-          docker run -d --name db --network conex -p 5432:5432 db-image  # Desplegar la base de datos
-          docker run -d --name backend --network conex -p 7878:7878 backend-image  # Desplegar el backend
-          docker run -d --name frontend --network conex -p 5173:80 frontend-image  # Desplegar el frontend
+          # Crear red si no existe
+          docker network create conex || true
+
+          # Desplegar la base de datos
+          docker run -d --name db --network conex -p 5432:5432 db-image || { echo "Error deploying db"; exit 1; }
+
+          # Desplegar el backend
+          docker run -d --name backend --network conex -p 7878:7878 backend-image || { echo "Error deploying backend"; exit 1; }
+
+          # Desplegar el frontend
+          docker run -d --name frontend --network conex -p 5173:80 frontend-image || { echo "Error deploying frontend"; exit 1; }
 
       - name: Notify deployment success
         run: echo "Deployment completed successfully!"
-
