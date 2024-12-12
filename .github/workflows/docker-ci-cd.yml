@@ -29,9 +29,9 @@ jobs:
 
       - name: Build Docker images
         run: |
-          docker build -t backend-image ./backend
-          docker build -t frontend-image ./frontend
-          docker build -t db-image ./db
+          docker build -t backend-image ./BACK-SOFT
+          docker build -t frontend-image ./FRONT-SOFT
+          docker build -t db-image ./BD-SOFT
 
   # Job para desplegar los contenedores en la red
   deploy:
