@@ -32,7 +32,7 @@ jobs:
           docker build -t backend-image ./BACK-SOFT
           docker build -t frontend-image ./FRONT-SOFT
           docker build -t db-image ./BD-SOFT
-
+          
       # Depuración para verificar que las imágenes se construyeron correctamente
       - name: List Docker images
         run: docker images
@@ -49,6 +49,9 @@ jobs:
         run: |
           # Crear red si no existe
           docker network create conex || true
+          
+          # Verificar que las imágenes están disponibles
+          docker images
 
           # Desplegar la base de datos
           docker run -d --name db --network conex -p 5432:5432 db-image || { echo "Error deploying db"; exit 1; }
