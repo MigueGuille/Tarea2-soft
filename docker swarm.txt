@@ -1,0 +1,15 @@
+docker swarm join --token SWMTKN-1-16zcshhvev2ffv4k6q4ww0f8m2l761o4d0ql5isy0dc5j28xia-c7zm077id674vm8g1glvh3p60 192.168.65.3:2377
+
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+
+docker run -d \
+  --name  \
+  -e POSTGRES_USER=myuser \
+  -e POSTGRES_PASSWORD=mypassword \
+  -e POSTGRES_DB=mydatabase \
+  -v pgdata:/var/lib/postgresql/data \
+  -p 5432:5432 \
+  my-postgres

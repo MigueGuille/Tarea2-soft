@@ -1,0 +1,10 @@
+{
+    "database": "auditoria",
+    "user": "postgres",
+    "password": "miguel",
+    "port": 5434,
+    "ssl": false,
+    "max": 20, 
+    "idleTimeoutMillis": 1000,
+    "maxUses": 6000
+  }

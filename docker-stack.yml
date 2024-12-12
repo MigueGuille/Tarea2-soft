@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  backend:
+    image: docker.io/library/backend-soft:latest
+    deploy:
+      replicas: 1
+    ports:
+      - "7878:7878"
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: miguel
+      DB_NAME: Bd_Videojuego
+    networks:
+      - app_network
+
+  frontend:
+    image: docker.io/library/frontend-soft:latest
+    deploy:
+      replicas: 1
+    ports:
+      - "5173:80"
+    networks:
+      - app_network
+
+  db:
+    image: docker.io/library/bd-soft:latest
+    deploy:
+      replicas: 1
+    environment:
+      DB_HOST: db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: miguel
+      POSTGRES_DB: Bd_Videojuego
+    volumes:
+      - BdData:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: overlay
+
+volumes:
+  BdData:
