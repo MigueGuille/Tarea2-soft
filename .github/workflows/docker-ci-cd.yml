@@ -27,7 +27,7 @@ jobs:
 
       - name: Build Docker images
         run: |
-          docker build -t miguely/arq-soft:db-latest ./BD-SOFT
+          docker build -t miguely/arq-soft:bd-latest ./BD-SOFT
           docker build -t miguely/arq-soft:backend-latest ./BACK-SOFT
           docker build -t miguely/arq-soft:frontend-latest ./FRONT-SOFT
 

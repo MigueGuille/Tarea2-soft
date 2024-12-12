@@ -1,15 +1,15 @@
 docker swarm join --token SWMTKN-1-16zcshhvev2ffv4k6q4ww0f8m2l761o4d0ql5isy0dc5j28xia-c7zm077id674vm8g1glvh3p60 192.168.65.3:2377
 
+docker build -t bd-soft:latest ./BD-SOFT
+docker build -t backend-soft:latest ./BACK-SOFT
+docker build -t frontend-soft:latest ./FRONT-SOFT
 
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+docker network create conex
+docker run --network conex -p 5432:5432 --name db -d bd-soft:latest
+docker run -d --name backend --network conex -p 7878:7878 backend-soft:latest
+docker run -d --name frontend --network conex -p 5173:80 frontend-soft:latest
 
+docker-compose up --build
 
-docker run -d \
-  --name  \
-  -e POSTGRES_USER=myuser \
-  -e POSTGRES_PASSWORD=mypassword \
-  -e POSTGRES_DB=mydatabase \
-  -v pgdata:/var/lib/postgresql/data \
-  -p 5432:5432 \
-  my-postgres
+docker swarm init
+docker stack deploy -c docker-stack.yml soft_project
